@@ -1,10 +1,8 @@
 package hello.core.order;
 
 import hello.core.discount.DiscountPolicy;
-import hello.core.discount.FixDiscountPolicy;
 import hello.core.member.Member;
 import hello.core.member.MemberRepository;
-import hello.core.member.MemoryMemberRepository;
 
 //주문 서비스 구현체
 //메모리 회원 리포지토리, 고정 금액 할인 정책을 구현체로 생성
@@ -12,9 +10,15 @@ import hello.core.member.MemoryMemberRepository;
 
 public class OrderServiceImpl implements OrderService{
 
-    private final MemberRepository memberRepository = new MemoryMemberRepository();
-    private final DiscountPolicy discountPolicy = new FixDiscountPolicy();
-
+    //구체화에 의존하지 않고 추상화인 인터페이스만 의존 (배우는 역할을 부여받아야한다. 직접 선택하면X(직접 객체생성X)
+    private final MemberRepository memberRepository;
+    private final DiscountPolicy discountPolicy;
+    
+    //생성자를 통해 구현체가 할당됨 -> DIP 지킴
+    public OrderServiceImpl(MemberRepository memberRepository, DiscountPolicy discountPolicy) {
+        this.memberRepository = memberRepository;
+        this.discountPolicy = discountPolicy;
+    }
 
     //주문이 들어오면 멤버를 만들어주고, 그 멤버의 할인을 확인하기 위해 할인에 넘겨주고.
     @Override
